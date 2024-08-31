@@ -32,7 +32,7 @@ module.exports.registerUser = async (req, res) => {
     res.cookie("token", token);
     res.send("User created successfully");
   } catch (error) {
-    console.error("Error registering user:", error); // Log error for debugging
+    console.error("Error registering user:", error); 
     if (!res.headersSent) {
       res.status(500).send(error.message);
     }
@@ -46,23 +46,26 @@ module.exports.loginUser = async (req, res) => {
     // Find the user
     let user = await userModel.findOne({ email: email });
     if (!user) {
-      return res.status(401).send("Email or password is incorrect");
+     
+      req.flash("error", "Email or password is incorrect");
+      return res.redirect("/");
     }
 
-    // Compare passwords
+
     bcrypt.compare(password, user.password, (error, result) => {
       if (error) {
-        console.error("Error comparing passwords:", error);
-        return res.status(500).send("Internal server error");
+        req.flash("error", "Email or password is incorrect");
+        return res.redirect("/");
       }
 
       if (result) {
-        // Generate token and set in cookie
+       
         const token = generateToken(user);
         res.cookie("token", token);
         res.redirect("/shop");
       } else {
-        res.status(401).send("Email or password is incorrect");
+        req.flash("error", "Email or password is incorrect");
+        return res.redirect("/");
       }
     });
   } catch (error) {
