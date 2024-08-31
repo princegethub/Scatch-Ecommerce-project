@@ -7,7 +7,7 @@ const userSchema = mongoose.Schema({
   password: String,
   contact: Number,
   picture: String,
-  isadmin: Boolean,
+
   cart: {
     type: Array,
     default: [],
@@ -20,4 +20,11 @@ const userSchema = mongoose.Schema({
 });
 
 
-module.exports = mongoose.model("user", userSchema);
+let user;
+try {
+  user = mongoose.model('user');
+} catch (error) {
+  user = mongoose.model('user', userSchema);
+}
+
+module.exports = user;
