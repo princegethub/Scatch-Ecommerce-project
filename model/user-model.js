@@ -8,10 +8,10 @@ const userSchema = mongoose.Schema({
   contact: Number,
   picture: String,
 
-  cart: {
-    type: Array,
-    default: [],
-  },
+  cart: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "product",
+  }],
   orders: {
     type: Array,
     default: [],
@@ -20,7 +20,7 @@ const userSchema = mongoose.Schema({
 });
 
 
-let user;
+let user ;
 try {
   user = mongoose.model('user');
 } catch (error) {
